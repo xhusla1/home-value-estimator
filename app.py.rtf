@@ -1,0 +1,37 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 import streamlit as st\
+import pandas as pd\
+import joblib\
+\
+model = joblib.load('property_model.pkl')\
+\
+st.title("\uc0\u55356 \u57312  Home Value Estimator")\
+\
+square_feet = st.number_input("Floor area (sq ft)", 300, 10000, 2000)\
+bedrooms = st.slider("Bedrooms", 1, 6, 3)\
+bathrooms = st.slider("Bathrooms", 1, 4, 2)\
+year_built = st.number_input("Year Built", 1900, 2025, 2000)\
+location = st.selectbox("Location", ['City', 'Suburb', 'Rural'])\
+\
+if st.button("Estimate Value"):\
+    location_map = \{'City': [1, 0], 'Suburb': [0, 1], 'Rural': [0, 0]\}\
+    loc_city, loc_suburb = location_map[location]\
+\
+    input_data = pd.DataFrame([\{\
+        'square_feet': square_feet,\
+        'bedrooms': bedrooms,\
+        'bathrooms': bathrooms,\
+        'year_built': year_built,\
+        'location_City': loc_city,\
+        'location_Suburb': loc_suburb\
+    \}])\
+\
+    prediction = model.predict(input_data)[0]\
+    st.success(f"Estimated Property Value: $\{prediction:,.0f\}")\
+}
