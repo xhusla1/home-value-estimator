@@ -1,0 +1,3 @@
+git remote add origin https://github.com/yourusername/home-value-estimator.git
+git branch -M main
+git push -u origin mail
